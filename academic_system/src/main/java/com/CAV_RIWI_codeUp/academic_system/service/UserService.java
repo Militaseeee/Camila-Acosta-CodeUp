@@ -40,7 +40,11 @@ public class UserService {
     public User updateProfile(Long id_user, String phone) {
         User existUser = userRepository.findById(id_user)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        existUser.setPhone(phone);
+
+        if (phone != null && !phone.isBlank()) {
+            existUser.setPhone(phone);
+        }
+
         return userRepository.save(existUser);
     }
 

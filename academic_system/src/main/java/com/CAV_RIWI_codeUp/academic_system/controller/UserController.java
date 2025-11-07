@@ -1,6 +1,7 @@
 package com.CAV_RIWI_codeUp.academic_system.controller;
 
-import com.CAV_RIWI_codeUp.academic_system.dto.UpdateProfileRequest;
+import com.CAV_RIWI_codeUp.academic_system.dto.user.UpdatePasswordRequest;
+import com.CAV_RIWI_codeUp.academic_system.dto.user.UpdateProfileRequest;
 import com.CAV_RIWI_codeUp.academic_system.model.Role;
 import com.CAV_RIWI_codeUp.academic_system.model.User;
 import com.CAV_RIWI_codeUp.academic_system.service.UserService;
@@ -35,24 +36,24 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-//    @PutMapping("/{id}/profile")
-//    public ResponseEntity<?> updateProfile(
-//            @PathVariable Long id_user,
-//            @RequestBody UpdateProfileRequest request) {
-//        try {
-//            User updatedUser = userService.updateProfile(id_user, request.getName(), request.getPhone());
-//            return ResponseEntity.ok(updatedUser);
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
+    @PutMapping("/{id_user}/profile")
+    public ResponseEntity<?> updateProfile(@PathVariable Long id_user, @RequestBody UpdateProfileRequest request) {
+        try {
+            User updatedUser = userService.updateProfile(
+                    id_user,
+                    request.getPhone()
+            );
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
     @PutMapping("/{id}/password")
-    public ResponseEntity<?> updatePassword(@PathVariable Long id,
-                                            @RequestParam String newPassword) {
+    public ResponseEntity<?> updatePassword(@PathVariable Long id, @RequestBody UpdatePasswordRequest request) {
         try {
-            User updatedUser = userService.updatePassword(id, newPassword);
+            User updatedUser = userService.updatePassword(id, request.getNewPassword());
+
             return ResponseEntity.ok(updatedUser);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -74,7 +75,6 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
-        return ResponseEntity.ok("Usuario eliminado correctamente.");
+        return ResponseEntity.ok("User successfully deleted");
     }
-
 }
