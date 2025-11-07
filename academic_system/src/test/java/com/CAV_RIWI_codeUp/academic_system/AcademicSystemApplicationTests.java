@@ -1,4 +1,4 @@
-package com.riwi_cav.academic_system;
+package com.CAV_RIWI_codeUp.academic_system;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

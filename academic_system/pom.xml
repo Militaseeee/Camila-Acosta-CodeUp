@@ -8,12 +8,11 @@
 		<version>3.5.7</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.riwi-cav</groupId>
+	<groupId>com.CAV-RIWI-codeUp</groupId>
 	<artifactId>academic_system</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
 	<name>academic_system</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Riwi CodeUp Academic System, a professional application for managing students, courses, and grades</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -63,11 +62,6 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
