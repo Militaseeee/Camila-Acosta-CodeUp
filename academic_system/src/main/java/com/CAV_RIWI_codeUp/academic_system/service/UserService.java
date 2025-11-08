@@ -1,5 +1,7 @@
 package com.CAV_RIWI_codeUp.academic_system.service;
 
+import com.CAV_RIWI_codeUp.academic_system.exception.BadRequestException;
+import com.CAV_RIWI_codeUp.academic_system.exception.ResourceNotFoundException;
 import com.CAV_RIWI_codeUp.academic_system.model.Role;
 import com.CAV_RIWI_codeUp.academic_system.model.User;
 import com.CAV_RIWI_codeUp.academic_system.repository.UserRepository;
@@ -30,7 +32,7 @@ public class UserService {
     public User createUser(User user) {
 
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("The email address is already registered");
+            throw new BadRequestException("The email address is already registered");
         }
 
         return userRepository.save(user);
@@ -39,7 +41,7 @@ public class UserService {
     // Method to update the profile (All users)
     public User updateProfile(Long id_user, String phone) {
         User existUser = userRepository.findById(id_user)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         if (phone != null && !phone.isBlank()) {
             existUser.setPhone(phone);
@@ -51,7 +53,7 @@ public class UserService {
     // Method to change password (All users)
     public User updatePassword(Long id, String newPassword) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         user.setPassword(newPassword);
         return userRepository.save(user);
     }

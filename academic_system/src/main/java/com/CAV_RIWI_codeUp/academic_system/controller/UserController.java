@@ -1,5 +1,7 @@
 package com.CAV_RIWI_codeUp.academic_system.controller;
 
+import com.CAV_RIWI_codeUp.academic_system.dto.user.CreateUserRequest;
+import com.CAV_RIWI_codeUp.academic_system.dto.user.LoginRequest;
 import com.CAV_RIWI_codeUp.academic_system.dto.user.UpdatePasswordRequest;
 import com.CAV_RIWI_codeUp.academic_system.dto.user.UpdateProfileRequest;
 import com.CAV_RIWI_codeUp.academic_system.model.Role;
@@ -20,17 +22,28 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User userRequest) {
-        Optional<User> user = userService.login(userRequest.getEmail(), userRequest.getPassword());
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        Optional<User> user = userService.login(
+                request.getEmail(),
+                request.getPassword()
+        );
+
         return user.isPresent()
-                ? ResponseEntity.ok(user.get())
-                : ResponseEntity.status(401).body("Incorrect email or password");
+                ? ResponseEntity.ok(user.get()) : ResponseEntity.status(401).body("Incorrect email or password");
     }
 
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody User user) {
+    public ResponseEntity<?> createUser(@RequestBody CreateUserRequest request) {
         try {
-            User newUser = userService.createUser(user);
+            User userToCreate = new User();
+            userToCreate.setName(request.getName());
+            userToCreate.setEmail(request.getEmail());
+            userToCreate.setPassword(request.getPassword());
+            userToCreate.setPhone(request.getPhone());
+            userToCreate.setRole(request.getRole());
+
+            User newUser = userService.createUser(userToCreate);
+
             return ResponseEntity.ok(newUser);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
