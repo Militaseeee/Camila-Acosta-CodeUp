@@ -19,7 +19,7 @@ Desarrollar una aplicación web sólida basada en **Spring Framework**, aplicand
 
 ## ✨ Características Implementadas
 
-### 👥 Gestión de Usuarios (Fase 1)
+### 👥 Gestión de Usuarios
 
 **Autenticación:**
 - `POST /api/users/login` → Validar credenciales de usuario (usando DTOs).
@@ -36,6 +36,24 @@ Desarrollar una aplicación web sólida basada en **Spring Framework**, aplicand
 - **ADMIN** → Puede crear, listar, asignar y eliminar usuarios.
 - **TEACHER** → Puede listar y gestionar estudiantes en sus cursos.
 - **STUDENT** → Puede consultar su perfil y calificaciones.
+
+### 📚 Gestión de Cursos
+
+**CRUD de Cursos:**
+- `POST /api/courses` → Crear un nuevo curso.
+- `GET /api/courses` → Listar todos los cursos.
+- `GET /api/courses/{id}` → Obtener un curso por su ID.
+- `PUT /api/courses/{id}/` → Actualizar un curso.
+- `DELETE /api/courses/{id}` → Eliminar un curso.
+
+**Asignación de Docentes:**
+- `PATCH /api/courses/{id_course}/assign-teacher` → Asignar un profesor a un curso.
+
+**Reglas:**
+
+- Solo **ADMIN** puede crear y asignar profesor.
+- Los **TEACHER** solo pueden ver sus cursos (si está implementado).
+- Los **STUDENT** pueden visualizar cursos disponibles (si está implementado).
 
 ---
 
@@ -60,13 +78,34 @@ El proyecto sigue una **Arquitectura por Capas**, con responsabilidades claramen
 
 ```
 com.CAV_RIWI_codeUp.academic_system
-├── controller/        → Controladores REST (manejan las peticiones HTTP)
-├── service/           → Lógica de negocio y validaciones
-├── repository/        → Acceso a datos (interfaces JPA)
-├── model/             → Entidades JPA (representan las tablas)
-├── dto/               → Objetos de transferencia de datos (entradas/salidas)
-├── exceptions/        → Excepciones personalizadas
-└── config/            → Configuraciones del proyecto (Swagger, seguridad, etc.)
+├── controller/                             → Controladores REST (manejan las peticiones HTTP)
+│   ├── UserController.java
+│   └── CourseController.java
+├── service/                                → Lógica de negocio y validaciones
+│   ├── UserService.java
+│   └── CourseService.java
+├── repository/                             → Acceso a datos (interfaces JPA)
+│   ├── UserRepository.java
+│   └── CourseRepository.java
+├── model/                                  → Entidades JPA (representan las tablas)
+│   ├── User.java
+│   ├── Role.java
+│   └── Course.java
+├── dto/                                    → Objetos de transferencia de datos (entradas/salidas)
+│   ├── user/
+│   │   ├── LoginRequest.java
+│   │   ├── CreateUserRequest.java
+│   │   ├── UpdateProfileRequest.java
+│   │   ├── UpdatePasswordRequest.java
+│   │   └── UserResponse.java
+│   └── course/
+│       ├── CreateCourseRequest.java
+│       ├── UpdateCourseRequest.java
+│       └── AssignTeacherRequest.java
+├── exceptions/                             → Excepciones personalizadas
+│   ├── ResourceNotFoundException.java
+│   └── BadRequestException.java
+└── config/                                 → Configuraciones del proyecto (Swagger, seguridad, etc.)
 ```
 
 ---
@@ -122,6 +161,15 @@ Este diagrama muestra la estructura de las tablas en la base de datos PostgreSQL
 | `password` | String | Contraseña cifrada |
 | `phone` | String | Teléfono |
 | `role` | Enum (`ADMIN`, `TEACHER`, `STUDENT`) | Rol del usuario |
+
+
+### 📘 Tabla `course`
+| Campo | Tipo                                 | Descripción                |
+|--------|--------------------------------------|----------------------------|
+| `id_course` | Long                                 | Identificador único        |
+| `name` | String                               | Nombre del curso           |
+| `credits` | String                               | Créditos |
+| `id_teacher` | FK `users.id_user`                   | Profesor asignado         |
 
 ---
 
