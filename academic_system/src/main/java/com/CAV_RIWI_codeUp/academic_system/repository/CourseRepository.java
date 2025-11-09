@@ -1,0 +1,15 @@
+package com.CAV_RIWI_codeUp.academic_system.repository;
+
+import com.CAV_RIWI_codeUp.academic_system.model.Course;
+import com.CAV_RIWI_codeUp.academic_system.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface CourseRepository extends JpaRepository<Course, Long> {
+
+    List<Course> findByTeacher(User teacher);
+
+}
