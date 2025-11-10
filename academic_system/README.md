@@ -55,6 +55,20 @@ Desarrollar una aplicación web sólida basada en **Spring Framework**, aplicand
 - Los **TEACHER** solo pueden ver sus cursos (si está implementado).
 - Los **STUDENT** pueden visualizar cursos disponibles (si está implementado).
 
+
+### 🧾 Gestión de Inscripciones (Enrollment)
+
+**CRUD de Enrollment:**
+- `POST /api/enrollments/register` → Registrar inscripción (solo ADMIN).
+- `DELETE /api/enrollments/{id}` → Cancelar inscripción (solo ADMIN).
+- `PATCH /api/enrollments/{id}/date` → Actualizar fecha de inscripción (solo ADMIN).
+- `GET /api/enrollments/{id}/details` → Ver detalles de la inscripción (todos con acceso según permiso).
+- `GET /api/enrollments/{id}/grades` → Ver calificaciones asociadas a la inscripción (Teacher y Student).
+
+**Reglas de negocio:**
+- Solo usuarios con rol **ADMIN** pueden crear/cancelar o modificar inscripciones.
+- **TEACHER** puede ver las inscripciones y asignar/modificar notas solo en sus cursos.
+- **STUDENT** puede ver sus inscripciones y sus propias notas.
 ---
 
 ## ⚙️ Tecnologías Utilizadas
@@ -79,32 +93,42 @@ El proyecto sigue una **Arquitectura por Capas**, con responsabilidades claramen
 ```
 com.CAV_RIWI_codeUp.academic_system
 ├── controller/                             → Controladores REST (manejan las peticiones HTTP)
-│   ├── UserController.java
-│   └── CourseController.java
-├── service/                                → Lógica de negocio y validaciones
-│   ├── UserService.java
-│   └── CourseService.java
-├── repository/                             → Acceso a datos (interfaces JPA)
-│   ├── UserRepository.java
-│   └── CourseRepository.java
-├── model/                                  → Entidades JPA (representan las tablas)
-│   ├── User.java
-│   ├── Role.java
-│   └── Course.java
+│   ├── CourseController.java 
+│   ├── EnrollmentController.java
+│   └── UserController.java
 ├── dto/                                    → Objetos de transferencia de datos (entradas/salidas)
-│   ├── user/
-│   │   ├── LoginRequest.java
-│   │   ├── CreateUserRequest.java
-│   │   ├── UpdateProfileRequest.java
-│   │   ├── UpdatePasswordRequest.java
-│   │   └── UserResponse.java
 │   └── course/
-│       ├── CreateCourseRequest.java
-│       ├── UpdateCourseRequest.java
-│       └── AssignTeacherRequest.java
+│   │   ├── CreateCourseRequest.java
+│   │   ├── UpdateCourseRequest.java
+│   │   └── AssignTeacherRequest.java
+│   ├── enrollment/
+│   │   ├── EnrollmentRequest.java
+│   │   ├── EnrollmentResponse.java
+│   │   └── UpdateEnrollmentRequest.java
+│   └── user/
+│       ├── LoginRequest.java
+│       ├── CreateUserRequest.java
+│       ├── UpdateProfileRequest.java
+│       ├── UpdatePasswordRequest.java
+│       └── UserResponse.java
 ├── exceptions/                             → Excepciones personalizadas
 │   ├── ResourceNotFoundException.java
 │   └── BadRequestException.java
+├── mapper/                                 → Conversión entre Entidades y DTOs
+│   └── EntityDtoMapper.java
+├── model/                                  → Entidades JPA (representan las tablas)
+│   ├── Course.java
+│   ├── Enrollment.java
+│   ├── Role.java
+│   └── User.java 
+├── repository/                             → Acceso a datos (interfaces JPA)
+│   ├── CourseRepository.java 
+│   ├── EnrollmentRepository.java 
+│   └── UserRepository.java
+├── service/                                → Lógica de negocio y validaciones
+│   ├── CourseService.java
+│   ├── EnrollmentController.java
+│   └── UserService.java
 └── config/                                 → Configuraciones del proyecto (Swagger, seguridad, etc.)
 ```
 
@@ -164,12 +188,21 @@ Este diagrama muestra la estructura de las tablas en la base de datos PostgreSQL
 
 
 ### 📘 Tabla `course`
-| Campo | Tipo                                 | Descripción                |
-|--------|--------------------------------------|----------------------------|
-| `id_course` | Long                                 | Identificador único        |
-| `name` | String                               | Nombre del curso           |
-| `credits` | String                               | Créditos |
-| `id_teacher` | FK `users.id_user`                   | Profesor asignado         |
+| Campo | Tipo                           | Descripción                |
+|--------|--------------------------------|----------------------------|
+| `id_course` | Long                           | Identificador único        |
+| `name` | String                         | Nombre del curso           |
+| `credits` | String                         | Créditos |
+| `id_teacher` | FK `users.id_user`             | Profesor asignado         |
+
+
+### 🧾 Tabla `enrollment`
+| Campo | Tipo                  | Descripción          |
+|--------|-----------------------|----------------------|
+| `id_enrollment` | Long                  | Identificador único  |
+| `id_user` | FK `users.id_user`    | Estudiante           |
+| `id_course` | FK `course.id_course` | Curso                |
+| `enrollment_date` | LocalDate             | Fecha de inscripción |
 
 ---
 

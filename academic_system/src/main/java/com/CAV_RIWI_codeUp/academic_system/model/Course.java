@@ -3,6 +3,8 @@ package com.CAV_RIWI_codeUp.academic_system.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "course")
@@ -22,11 +24,7 @@ public class Course {
     @Column(nullable = false)
     private String credits;
 
-    /**
-     * Relación con Enrollment.
-     * Un curso puede tener muchas inscripciones (Enrollments).
-     */
-    /*
+    // Relationship with Enrollment -> A course can have multiple enrollments.
     @OneToMany(
         mappedBy = "course",
         cascade = CascadeType.ALL,
@@ -34,6 +32,5 @@ public class Course {
         fetch = FetchType.LAZY
     )
     private List<Enrollment> enrollments;
-    */
 
 }

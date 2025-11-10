@@ -1,7 +1,15 @@
 package com.CAV_RIWI_codeUp.academic_system.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.List;
+
+@Data
+@NoArgsConstructor // <-- Generates the empty constructor that JPA needs
+@AllArgsConstructor // <-- Generates the constructor with all arguments
 @Entity
 @Table(name = "users")
 public class User {
@@ -25,63 +33,18 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public User() {
-    }
+    @OneToMany(
+            mappedBy = "teacher", // teacher is the field in Course.java
+            fetch = FetchType.LAZY
+    )
+    private List<Course> coursesAsTeacher;
 
-    public User(Long id_user, String name, String email, String password, String phone, Role role) {
-        this.id_user = id_user;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.phone = phone;
-        this.role = role;
-    }
+    @OneToMany(
+            mappedBy = "user", // user is the field in Enrollment.java
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<Enrollment> enrollmentsAsStudent;
 
-    public Long getId_user() {
-        return id_user;
-    }
-
-    public void setId_user(Long id_user) {
-        this.id_user = id_user;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 }
