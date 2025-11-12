@@ -1,5 +1,6 @@
 package com.CAV_RIWI_codeUp.academic_system.service;
 
+import com.CAV_RIWI_codeUp.academic_system.dto.user.UpdateProfileRequest;
 import com.CAV_RIWI_codeUp.academic_system.exception.BadRequestException;
 import com.CAV_RIWI_codeUp.academic_system.exception.ResourceNotFoundException;
 import com.CAV_RIWI_codeUp.academic_system.model.Role;
@@ -18,14 +19,30 @@ public class UserService {
     private UserRepository userRepository;
 
     // Method to login all rol
-    public Optional<User> login(String email, String password) {
+//    public Optional<User> login(String email, String password) {
+//
+//        Optional<User> user = userRepository.findByEmail(email);
+//        if (user.isPresent() && user.get().getPassword().equals(password)) {
+//            return user;
+//        }
+//
+//        return Optional.empty();
+//    }
 
-        Optional<User> user = userRepository.findByEmail(email);
-        if (user.isPresent() && user.get().getPassword().equals(password)) {
-            return user;
+    // Se recibe un User es del dto -> solo user y pass
+    public User login(User userType) {
+
+        // Se busca en la BD el email del objeto que llego
+        User userFromDb = userRepository.findByEmail(userType.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        // Comparamos la contra del objeto y de la BD
+        if (!userFromDb.getPassword().equals(userType.getPassword())) {
+            throw new BadRequestException("Incorrect password");
         }
 
-        return Optional.empty();
+        // 3. Se devuelve el usuario COMPLETO de la BD
+        return userFromDb;
     }
 
     // Method to create user (Only Admin)
@@ -39,12 +56,24 @@ public class UserService {
     }
 
     // Method to update the profile (All users)
-    public User updateProfile(Long id_user, String phone) {
-        User existUser = userRepository.findById(id_user)
+//    public User updateProfile(Long id_user, String phone) {
+//        User existUser = userRepository.findById(id_user)
+//                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+//
+//        if (phone != null && !phone.isBlank()) {
+//            existUser.setPhone(phone);
+//        }
+//
+//        return userRepository.save(existUser);
+//    }
+
+    public User updateProfile(Long id, UpdateProfileRequest request) {
+        User existUser = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        if (phone != null && !phone.isBlank()) {
-            existUser.setPhone(phone);
+        // Extraemos el dato del objeto aquí adentro
+        if (request.getPhone() != null && !request.getPhone().isBlank()) {
+            existUser.setPhone(request.getPhone());
         }
 
         return userRepository.save(existUser);
