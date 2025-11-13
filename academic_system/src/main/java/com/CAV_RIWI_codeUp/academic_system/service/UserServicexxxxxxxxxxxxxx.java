@@ -5,18 +5,17 @@ import com.CAV_RIWI_codeUp.academic_system.exception.BadRequestException;
 import com.CAV_RIWI_codeUp.academic_system.exception.ResourceNotFoundException;
 import com.CAV_RIWI_codeUp.academic_system.model.Role;
 import com.CAV_RIWI_codeUp.academic_system.model.User;
-import com.CAV_RIWI_codeUp.academic_system.repository.UserRepository;
+import com.CAV_RIWI_codeUp.academic_system.repository.interfaces.DataUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserServicexxxxxxxxxxxxxx {
 
     @Autowired
-    private UserRepository userRepository;
+    private DataUserRepository userRepository;
 
     // Method to login all rol
 //    public Optional<User> login(String email, String password) {
